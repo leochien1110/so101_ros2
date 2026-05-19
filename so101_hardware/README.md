@@ -45,14 +45,15 @@ cd ~/le_ws
 ./calibrate_and_install.sh my_follower /dev/ttyACM1
 ```
 
-This creates calibration data at:
+This creates calibration data such as:
 - `~/.cache/huggingface/lerobot/calibration/robots/so101_follower/my_follower.json`
-- `~/le_ws/src/lerobot-ros/lerobot_robot_ros/so101_moveit/config/motor_calibration.yaml`
+
+Use that file directly with the launch argument below, or copy the values into `so101_moveit/config/motor_calibration.yaml` in this repository.
 
 ### 2. Build Hardware Interface
 
 ```bash
-cd ~/le_ws
+cd ~/ros2_ws
 colcon build --packages-select so101_hardware so101_moveit
 source install/setup.bash
 ```
@@ -197,7 +198,7 @@ If RViz doesn't match physical robot:
 ### Building from Source
 
 ```bash
-cd ~/le_ws
+cd ~/ros2_ws
 colcon build --packages-select so101_hardware --cmake-clean-first
 source install/setup.bash
 ```
