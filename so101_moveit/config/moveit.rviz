@@ -46,7 +46,7 @@ Visualization Manager:
       Plane Cell Count: 20
       Reference Frame: <Fixed Frame>
       Value: true
-    - Acceleration_Scaling_Factor: 1
+    - Acceleration_Scaling_Factor: 0.1
       Class: moveit_rviz_plugin/MotionPlanning
       Enabled: true
       Move Group Namespace: ""
@@ -107,6 +107,10 @@ Visualization Manager:
             Show Axes: false
             Show Trail: false
             Value: true
+          world:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
           wrist:
             Alpha: 1
             Show Axes: false
@@ -188,6 +192,10 @@ Visualization Manager:
             Show Axes: false
             Show Trail: false
             Value: true
+          world:
+            Alpha: 1
+            Show Axes: false
+            Show Trail: false
           wrist:
             Alpha: 1
             Show Axes: false
@@ -197,19 +205,43 @@ Visualization Manager:
         Show Robot Collision: false
         Show Robot Visual: true
       Value: true
-      Velocity_Scaling_Factor: 1
+      Velocity_Scaling_Factor: 0.1
     - Class: rviz_default_plugins/TF
       Enabled: true
       Frame Timeout: 15
       Frames:
         All Enabled: true
+        base:
+          Value: true
+        gripper:
+          Value: true
+        jaw:
+          Value: true
+        lower_arm:
+          Value: true
+        shoulder:
+          Value: true
+        upper_arm:
+          Value: true
+        world:
+          Value: true
+        wrist:
+          Value: true
       Marker Scale: 0.15000000596046448
       Name: TF
       Show Arrows: true
       Show Axes: true
       Show Names: true
       Tree:
-        {}
+        world:
+          base:
+            shoulder:
+              upper_arm:
+                lower_arm:
+                  wrist:
+                    gripper:
+                      jaw:
+                        {}
       Update Interval: 0
       Value: true
   Enabled: true
@@ -298,5 +330,5 @@ Window Geometry:
   Views:
     collapsed: true
   Width: 1466
-  X: 70
-  Y: 27
+  X: 1083
+  Y: 411
