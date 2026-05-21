@@ -1,7 +1,7 @@
 from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument
 from launch.conditions import IfCondition
-from launch.substitutions import LaunchConfiguration, PathJoinSubstitution
+from launch.substitutions import LaunchConfiguration, PathJoinSubstitution, PythonExpression
 from launch_ros.actions import Node
 from launch_ros.parameter_descriptions import ParameterValue
 from launch_ros.substitutions import FindPackageShare
@@ -9,6 +9,7 @@ from moveit_configs_utils import MoveItConfigsBuilder
 
 
 def generate_launch_description():
+    use_isaac_sim = LaunchConfiguration('use_isaac_sim')
     use_rviz = LaunchConfiguration('use_rviz')
     use_sim_time = LaunchConfiguration('use_sim_time')
     start_state_max_bounds_error = LaunchConfiguration('start_state_max_bounds_error')
@@ -26,6 +27,7 @@ def generate_launch_description():
         package='robot_state_publisher',
         executable='robot_state_publisher',
         output='screen',
+        condition=IfCondition(use_isaac_sim),
         parameters=[
             moveit_config.robot_description,
             {'use_sim_time': ParameterValue(use_sim_time, value_type=bool)},
@@ -36,6 +38,7 @@ def generate_launch_description():
         package='moveit_ros_move_group',
         executable='move_group',
         output='screen',
+        condition=IfCondition(use_isaac_sim),
         parameters=[
             moveit_config.to_dict(),
             {
@@ -62,13 +65,24 @@ def generate_launch_description():
             moveit_config.to_dict(),
             {'use_sim_time': ParameterValue(use_sim_time, value_type=bool)},
         ],
-        condition=IfCondition(use_rviz),
+        condition=IfCondition(
+            PythonExpression(
+                [
+                    "'",
+                    use_isaac_sim,
+                    "'.lower() == 'true' and '",
+                    use_rviz,
+                    "'.lower() == 'true'",
+                ]
+            )
+        ),
     )
 
     bridge_node = Node(
         package='so101_isaac_bridge',
         executable='so101_isaac_joint_command_bridge',
         output='screen',
+        condition=IfCondition(use_isaac_sim),
         parameters=[
             {
                 'use_sim_time': ParameterValue(use_sim_time, value_type=bool),
@@ -83,6 +97,11 @@ def generate_launch_description():
 
     return LaunchDescription(
         [
+            DeclareLaunchArgument(
+                'use_isaac_sim',
+                default_value='true',
+                choices=['true', 'false'],
+            ),
             DeclareLaunchArgument('use_rviz', default_value='true'),
             DeclareLaunchArgument('use_sim_time', default_value='false'),
             DeclareLaunchArgument('start_state_max_bounds_error', default_value='0.001'),
